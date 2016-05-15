@@ -1,0 +1,230 @@
+% Slides for ApacheCon US 2015
+%
+% Phil Steitz <phil@steitz.com>
+% August 3, 2016
+
+\documentclass[14pt,mathserif]{beamer}
+\usetheme{Boadilla}
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortinstitute
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+      \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+      \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{color}
+\usepackage{minted}
+
+%---- Copy the frame title color --------------------------%
+\newcommand{\fblue}[1]{\usebeamercolor[fg]{frametitle}{#1}}
+
+\newcommand{\newauthor}[2]{
+  \parbox{0.26\textwidth}{
+    \texorpdfstring
+      {
+        \centering
+        #1 \\
+        {\scriptsize{\urlstyle{same}\url{#2}\urlstyle{tt}}}
+      }
+      {#1}
+  }
+}
+
+\hypersetup{colorlinks,linkcolor=cyan,urlcolor=blue}
+
+%----------- Section title slides -----------------------------------%
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\secname\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
+
+%gets rid of navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+\title{Java as a Platform for Statistical Computing}
+\author{
+  \newauthor{Phil Steitz}{phil@steitz.com}
+}
+\institute[Joint Statistical Meetings]{Joint Statistical Meetings 2016}
+\date{August 3, 2016}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+{
+\begin{frame} %[plain]
+  \titlepage
+\end{frame}
+}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Agenda}
+\begin{itemize}
+  \item Historical challenges
+  \item Contemporary improvements: language, VM, libraries
+  \item Distributed computing frameworks
+  \item Example: BLB implemented using Apache Flink and Hipparchus Statistics
+\end{itemize}
+
+\end{frame}
+
+%--------------------------------------------------------------------%
+\section[History]{Historical Challenges}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Historical Criticisms of Java for Scientific Computing}
+
+\begin{enumerate}
+  \item Java is slow
+  \item Java numerics are poorly defined and implemented
+  \item Robust, fully tested implementations of core algorithms is lacking
+\end{enumerate}
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Java Performance}
+Early 1.1, 1.2 performance. Analysis and benchmarks from, e.g. http://dl.acm.org/citation.cfmdoid=304065.304092
+\\
+\\
+Brief overview of core performance limiters and progression of JDKs, as in
+https://en.wikipedia.org/wiki/Java\_performance
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Java Numerics}
+Follow progression in
+Kahan, W.; Joseph D. Darcy (1998-03-01). "How Java's Floating-Point Hurts Everyone Everywhere"
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Java Libraries}
+Quick overview of java.lang.Math and early efforts 
+\begin{enumerate}
+\item http://math.nist.gov/javanumerics/
+\item https://dst.lbl.gov/ACSSoftware/colt/
+\item http://math.nist.gov/javanumerics/jama/
+\end{enumerate}
+Examples showing big gap between what has been available in Java and Fortran, C, Python, R
+\end{frame}
+
+%--------------------------------------------------------------------%
+\section[History]{Contemporary Improvements}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Performance}
+  Summary of core performance improvements
+  \begin{enumerate}
+  \item JIT
+  \item Threading
+  \item IO
+  \item Optimizer
+  \end{enumerate}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Numerics and Libraries}
+  Language improvements and "standard" workarounds for floating point anomalies; baked 
+  into libraries such as Apache Commons Math, Mahout, Sanselan.  Review of key libraries.
+  Likely multiple slides on current generation java math/stat libraries.  Careful review of Apache Commons Math, Apache Mahout / Sanselan and Hipparchus (new).
+\end{frame}
+
+%--------------------------------------------------------------------%
+\section[History]{Distributed Computing Frameworks}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{BigData means Distributed Computing}
+Three slides showing architectures of Apache Hadoop, Apache Spark and Apache Flink
+\\
+\\
+One slide summarizing core architecture requirements: data distribution, process coordination, inter-process communication and Java language features that support these.
+\\
+\\
+One slide summarizing Java middleware / supporting OSS infrastructure underneath key frameworks
+
+\end{frame}
+
+%--------------------------------------------------------------------%
+\section[History]{Example: Bag of Little Bootstraps}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Problem: Bootstrapping Very Large Datasets}
+  \begin{small}
+  First slide: problem statement
+Present a simple estimation problem: confidence intervals for a quantile estimate.  Will motivate this as SLA determination problem. Huge stream of API response times.  Assume data is already distributed and can be assumed uniform across partitions (i.e., distributed nodes can be assumed to be independent samples from the same underlying distribution).
+\\
+Next slide: Robust way to get confidence interval would be to pool all the data and bootstrap.  Explain this.
+\\
+Next slide: Do arithmetic on memory, data movement, resampling and see this is intractable for very large data streams.
+\end{small}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Solution: Bag of Little Bootstraps}
+  First slide: overview of the method, following, e.g. 
+  https://arxiv.org/pdf/1112.5016.pdf
+  \\
+  Second slide: application current problem
+\end{frame} 
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Required Components for Solution}
+  \begin{enumerate}
+  \item Container for sampling and estimation processes
+  \item Quantile estimation and resampling modules
+  \item Data management infrastructure
+  \item Inter-process communication stack (low to high level)
+  \item Process coordination
+  \item Configuration management
+  \end{enumerate}
+\end{frame}
+  
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Implementation Leveraging Java Frameworks}
+Diagram showing solution architecture, based on Apache Spark and Zookeeper with Hipparchus (extension of Apache Commons Math) for estimation and resampling.
+\\
+Follow with samples of implementation code
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Conclusion}
+\begin{enumerate}
+\item Summarize discussion of limitations and how contemporary JDKs and supporting libraries have addressed them.
+\item Summarize big data example, pointing out ease of implementation in Java.  
+\item Also point out that hybrid solutions can be easy and interoperability is becoming easy.  Show R-Java bindings as example and execution of R jobs inside Spark.
+\end{enumerate}
+\end{frame}
+
+\end{document}
