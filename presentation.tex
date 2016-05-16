@@ -150,9 +150,11 @@ Examples showing big gap between what has been available in Java and Fortran, C,
 %----------- slide --------------------------------------------------%
 \begin{frame}
   \frametitle{Numerics and Libraries}
-  Language improvements and "standard" workarounds for floating point anomalies; baked 
-  into libraries such as Apache Commons Math, Mahout, Sanselan.  Review of key libraries.
-  Likely multiple slides on current generation java math/stat libraries.  Careful review of Apache Commons Math, Apache Mahout / Sanselan and Hipparchus (new).
+  Language improvements and "standard" workarounds for floating point anomalies baked 
+  into libraries such as Apache Commons Math, Mahout, Sanselan.  
+  \\
+  \\
+  Review of key libraries. Multiple slides on current generation java math/stat libraries.  Careful review of Apache Commons Math, Apache Mahout / Sanselan and Hipparchus (new).
 \end{frame}
 
 %--------------------------------------------------------------------%
@@ -161,7 +163,7 @@ Examples showing big gap between what has been available in Java and Fortran, C,
 %----------- slide --------------------------------------------------%
 \begin{frame}
   \frametitle{BigData means Distributed Computing}
-Three slides showing architectures of Apache Hadoop, Apache Spark and Apache Flink
+Three slides showing architectures of Apache Hadoop, Apache Spark and Apache Flink.
 \\
 \\
 One slide summarizing core architecture requirements: data distribution, process coordination, inter-process communication and Java language features that support these.
@@ -177,14 +179,22 @@ One slide summarizing Java middleware / supporting OSS infrastructure underneath
 %----------- slide --------------------------------------------------%
 \begin{frame}
   \frametitle{Problem: Bootstrapping Very Large Datasets}
-  \begin{small}
-  First slide: problem statement
-Present a simple estimation problem: confidence intervals for a quantile estimate.  Will motivate this as SLA determination problem. Huge stream of API response times.  Assume data is already distributed and can be assumed uniform across partitions (i.e., distributed nodes can be assumed to be independent samples from the same underlying distribution).
+Present a simple estimation problem: confidence intervals for a quantile estimate.  
 \\
-Next slide: Robust way to get confidence interval would be to pool all the data and bootstrap.  Explain this.
 \\
-Next slide: Do arithmetic on memory, data movement, resampling and see this is intractable for very large data streams.
-\end{small}
+Motivate this as SLA determination problem. Huge stream of API response times.  Assume data is already distributed and can be assumed uniform across partitions (i.e., distributed nodes can be assumed to be independent samples from the same underlying distribution).
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+\frametitle{Simple solution: pool all data and bootstrap}
+Present full dataset bootstrap solution algorithm.
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+\frametitle{Problem: intractable for very large datasets}
+Do arithmetic on memory, data movement, resampling cost.
 \end{frame}
 
 %----------- slide --------------------------------------------------%
@@ -193,7 +203,8 @@ Next slide: Do arithmetic on memory, data movement, resampling and see this is i
   First slide: overview of the method, following, e.g. 
   https://arxiv.org/pdf/1112.5016.pdf
   \\
-  Second slide: application current problem
+  \\
+  Second slide: application of the algorithm to current problem.
 \end{frame} 
 
 %----------- slide --------------------------------------------------%
@@ -213,6 +224,7 @@ Next slide: Do arithmetic on memory, data movement, resampling and see this is i
 \begin{frame}
   \frametitle{Implementation Leveraging Java Frameworks}
 Diagram showing solution architecture, based on Apache Spark and Zookeeper with Hipparchus (extension of Apache Commons Math) for estimation and resampling.
+\\
 \\
 Follow with samples of implementation code
 \end{frame}
