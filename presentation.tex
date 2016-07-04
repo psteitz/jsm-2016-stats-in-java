@@ -82,7 +82,7 @@
   \item Historical challenges
   \item Contemporary improvements: language, VM, libraries
   \item Distributed computing frameworks
-  \item Example: BLB implemented using Apache Flink and Hipparchus Statistics
+  \item Example: BLB implemented using Apache Spark and Hipparchus Statistics
 \end{itemize}
 
 \end{frame}
@@ -200,21 +200,37 @@ Do arithmetic on memory, data movement, resampling cost.
 %----------- slide --------------------------------------------------%
 \begin{frame}
   \frametitle{Solution: Bag of Little Bootstraps}
-  First slide: overview of the method, following, e.g. 
-  https://arxiv.org/pdf/1112.5016.pdf
-  \\
-  \\
-  Second slide: application of the algorithm to current problem.
+  \begin{itemize}
+  \item Basic idea: partition the large dataset into subsamples and average bootstrap estimates
+        computed over subsamples
+  \item Requires less space, data movement and computing 
+  \item \textcolor{blue}
+      {\href{https://arxiv.org/pdf/1112.5016.pdf}{A Scalable Bootstrap for Massive Data}}*
+      provides theoretical justification and empirical analysis of space and compute saves
+  \end{itemize}
+  \begin{small}
+  *Kleiner, Talwalkar, Sarkar, Jordan, Journal Of The Royal Statistical Society 76(4), 2011
+  \end{small}
 \end{frame} 
 
 %----------- slide --------------------------------------------------%
 \begin{frame}
-  \frametitle{Required Components for Solution}
+  \frametitle{Application to current problem}
   \begin{enumerate}
-  \item Container for sampling and estimation processes
-  \item Quantile estimation and resampling modules
-  \item Data management infrastructure
-  \item Inter-process communication stack (low to high level)
+  \item Shard large stream of input data into random subsamples
+  \item Compute bootstrap confidence intervals for each subsample
+  \item Average the estimated upper and lower bounds across the subsamples
+  \end{enumerate}
+ \end{frame}
+  
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Logical Components Required for Solution}
+  \begin{enumerate}
+  \item Supervisor to split out subsamples, distribute to workers and aggregate results
+  \item Data management 
+  \item Quantile estimation
+  \item Inter-process communication stack
   \item Process coordination
   \item Configuration management
   \end{enumerate}
